@@ -19,8 +19,6 @@ class LowercaseSentenceTokenizerTest {
     /*
      * Write your test here!
      */
-    
-
     // Wave 3
     @Test
     void testTokenizeWithCapitalization() {
