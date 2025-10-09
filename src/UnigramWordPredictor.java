@@ -130,13 +130,13 @@ public class UnigramWordPredictor implements WordPredictor {
 
     Random random = new Random();
 
-    for (String word : context){
-      List<String> currentList = neighborMap.get(word);
-      int randomInt = random.nextInt(currentList.size());
-      return currentList.get(randomInt);
-    }
+    String lastWord = context.get(context.size() - 1);
 
-    return null;
+    List<String> currentList = neighborMap.get(lastWord);
+
+    int randomInt = random.nextInt(currentList.size());
+
+    return currentList.get(randomInt);
   }
   
   /**
