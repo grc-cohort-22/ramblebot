@@ -1,4 +1,4 @@
-# ramblebot
+# ramblebot - hey this is Ryan and it's my first change
 
 A project to exercise Java, JUnit, git, GitHub, and code-reading skills. Students will create a language model to generate text.
 
