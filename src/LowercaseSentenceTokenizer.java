@@ -31,10 +31,13 @@ public class LowercaseSentenceTokenizer implements Tokenizer {
    * @return a list of tokens, where each token is a word or a period
    */
   public List<String> tokenize(Scanner scanner) {
-    String token = scanner.nextLine().toLowerCase();
-    //(\\s+) get any spaces.
-    //?<=[a-z])(?=\\.(?![a-z])) splits b4 period if it's after a letter (this.) for instance. second half of ()'s is needed so we dont hit dr.smith.
-    List<String> tokenList = Arrays.asList(token.split("\\s+|(?<=[a-z])(?=\\.(?![a-z]))"));
+    List<String> tokenList = new ArrayList<>();
+    while(scanner.hasNext()) {
+      String token = scanner.nextLine().toLowerCase();
+      //(\\s+) get any spaces.
+      //?<=[a-z])(?=\\.(?![a-z])) splits b4 period if it's after a letter (this.) for instance. second half of ()'s is needed so we dont hit dr.smith.
+      tokenList.addAll(Arrays.asList(token.split("\\s+|(?<=[a-z])(?=\\.(?![a-z]))")));
+    }
     return tokenList;
   }
 } 
