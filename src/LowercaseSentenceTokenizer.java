@@ -32,7 +32,7 @@ public class LowercaseSentenceTokenizer implements Tokenizer {
    */
   public List<String> tokenize(Scanner scanner) {
     String token = scanner.nextLine();
-    List<String> tokenList = Arrays.asList(token.split(" "));
+    List<String> tokenList = Arrays.asList(token.split("\\s+"));
     return tokenList;
   }
 } 
