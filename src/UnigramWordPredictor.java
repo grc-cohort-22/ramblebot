@@ -52,13 +52,14 @@ public class UnigramWordPredictor implements WordPredictor {
     List<String> trainingWords = tokenizer.tokenize(scanner);
 
     // TODO: Convert the trainingWords into neighborMap here
-    for(int i = 0; i < trainingWords.size(); i++) {
+    neighborMap = new HashMap<>();
+    for(int i = 0; i < trainingWords.size() - 1; i++) {
       if(!neighborMap.containsKey(trainingWords.get(i))) {
         List<String> newList = new ArrayList<>();
-        newList.add(trainingWords.get(i + 1))
+        newList.add(trainingWords.get(i + 1));
         neighborMap.put(trainingWords.get(i), newList);
       } else {
-        neighborMap.get(i).add(trainingWords.get(i + 1));
+        neighborMap.get(trainingWords.get(i)).add(trainingWords.get(i + 1));
       }
     }
   }
