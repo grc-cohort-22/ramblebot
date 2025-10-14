@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -111,7 +112,11 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+    String lastWord = context.get(context.size() - 1);
+    List<String> options = neighborMap.get(lastWord);
+    Random rand = new Random();
+    int randOption = rand.nextInt(options.size());
+    return options.get(randOption);
   }
   
   /**
