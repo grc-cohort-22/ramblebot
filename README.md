@@ -1,6 +1,6 @@
 # ramblebot
 
-A project to exercise Java, JUnit, git, GitHub, and code-reading skills. Students will create a language model to generate text.
+A project to exercise Java, JUnit, git, GitHub, and code-reading skills. Students will create a language model to generate text. When I enter a postive integer, it didn't show me the same result.
 
 ## Expectations
 

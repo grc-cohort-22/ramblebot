@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,7 +31,49 @@ public class LowercaseSentenceTokenizer implements Tokenizer {
    */
   public List<String> tokenize(Scanner scanner) {
     // TODO: Implement this function to convert the scanner's input to a list of words and periods
-    return null;
+      List<String> tokens = new ArrayList<>();
+      //spliting the words which is one or more character (space, newline)
+      scanner.useDelimiter("\\s+");
+      //runs as long as there are more tokens in scanner input
+      while (scanner.hasNext()) {
+        //
+        //scanner.next();
+        // place to store the list of string in myString, reads the next token from input
+      String myString = scanner.next();
+       // all the output need to be in lowercase
+      myString = myString.toLowerCase();
+      // check if the string ends with period.
+      
+      
+    boolean checkPeriod = myString.endsWith(".");
+      /*
+       if myString ends with a period. we want period to be a seperate token(words).
+      fine + period.
+
+       else add myString to tokens.
+       
+       "hello how are you" {"hello" , "how", "are", "you"}
+        "I am fine."["i", "am","fine","."]
+        "I am Dr.Smith"["i", "am","dr.smith"]
+       */
+        
+       if(checkPeriod == true){
+        //Find some way to remove last character from myString
+        String myString2 = myString.substring(0, myString.length() - 1);
+        tokens.add(myString2);
+          tokens.add(".");
+       }else{
+       tokens.add(myString);
+       }
+   
+    
+     
+      
+      
+      
+      }
+ 
+    return tokens;
   }
 }
 
