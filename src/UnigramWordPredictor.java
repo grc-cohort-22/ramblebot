@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Random;
 
 /**
  * A class for predicting the next word in a sequence using a unigram model.
@@ -52,6 +53,20 @@ public class UnigramWordPredictor implements WordPredictor {
     List<String> trainingWords = tokenizer.tokenize(scanner);
 
     // TODO: Convert the trainingWords into neighborMap here
+    neighborMap = new HashMap<>(); //Initialize a new empty hashmap
+
+    for (int i = 0; i < trainingWords.size() - 1; i++) { //Loops through the list of trainingWords
+      String word = trainingWords.get(i); //gets current word and assigns it to word
+      String nextWord = trainingWords.get(i + 1); //gets next word and assigns it to nextWord
+      
+      if (!neighborMap.containsKey(word)) { //if neighborMap doesn't contain current word
+        neighborMap.put(word, new ArrayList<>()); //put current word in map and create an ArrayList for it
+      }
+
+      neighborMap.get(word).add(nextWord); //get current word and add nextWord to it's associated list
+    }
+
+
   }
 
   /**
@@ -99,9 +114,27 @@ public class UnigramWordPredictor implements WordPredictor {
    * @return the predicted next word, or null if no prediction can be made
    */
   public String predictNextWord(List<String> context) {
-    // TODO: Return a predicted word given the words preceding it
+    // TODO: Return a predicted word given the words preceding it 
     // Hint: only the last word in context should be looked at
-    return null;
+    if (context.isEmpty() == true) { // Handles if context is empty from the start
+      return "User did not input anything";
+    }
+
+    String lastWord = context.get(context.size() - 1);// get the last word of the context input
+
+    List<String> nextWords = neighborMap.get(lastWord);// get the list of words that follow the last word in the neighbor map
+
+    if (nextWords == null || nextWords.isEmpty()) {
+      return "No words follow the last word in context";
+    }
+
+    Random random = new Random(); // created random object
+
+    int randomIndex = random.nextInt(nextWords.size()); // Uses our nextWords list size as a range for our randomly generated index
+
+    String predictedWord = nextWords.get(randomIndex); // Using randomIndex to randomly select a word from nextWords
+
+    return predictedWord; // return the predicted word
   }
   
   /**

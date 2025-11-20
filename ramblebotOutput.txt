@@ -1,0 +1,3 @@
+Enter the filename: songLyrics.txt
+Enter the number of words to generate: 100
+cut the way down, we so high off the corner tryna put it together how to know that didn't last forever (forever) ever, ever (ever) forever now you come with me moving your intentions to love see, i all you had a love when you never figure out how to love, never figure out how to love see, you had a lot of crooks still crook you had a love, how to me, be me, you, around you fall, oh, yeah forever, ever, ever forever, ever, ever forever, ever, ever forever, ever, ever (ever) forever, ever, oh oh, oh-oh-oh, oh,
