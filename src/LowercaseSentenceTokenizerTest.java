@@ -19,7 +19,14 @@ class LowercaseSentenceTokenizerTest {
     /*
      * Write your test here!
      */
-    
+    @Test
+    void testTokenizeWithNoCapsOrPeriodStringSpacing(){
+        LowercaseSentenceTokenizer tokenizer = new LowercaseSentenceTokenizer();
+        Scanner scanner = new Scanner("space doublespace  triple space   lot of space          space");
+        List<String> tokens = tokenizer.tokenize(scanner);
+
+        assertEquals(List.of("space", "doublespace", "triple", "space", "lot", "of", "space", "space"), tokens);
+    };
 
     // Wave 3
     @Test
