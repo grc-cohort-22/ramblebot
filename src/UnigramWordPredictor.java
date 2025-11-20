@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Random;
 
 /**
  * A class for predicting the next word in a sequence using a unigram model.
@@ -50,8 +51,45 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
+    List<String> connectWords = new ArrayList<String>();
+    neighborMap = new HashMap<>();
 
-    // TODO: Convert the trainingWords into neighborMap here
+    if(trainingWords.isEmpty() == true)
+    {
+      return;
+    }
+
+    String theWord = trainingWords.get(0);
+    String nextWord = trainingWords.get(1);
+    connectWords.add(nextWord);
+
+    neighborMap.put(theWord, connectWords);
+
+    for(int i = 1; i < trainingWords.size(); i++)
+    {
+      if((i + 1) >= trainingWords.size())
+      {
+        return;
+      }
+      else
+      {
+        theWord = trainingWords.get(i);
+        nextWord = trainingWords.get(i + 1);
+
+        if(neighborMap.containsKey(theWord) == true)  
+        {
+          connectWords = neighborMap.get(theWord);
+          connectWords.add(nextWord);
+          neighborMap.put(theWord, connectWords);
+        }
+        else if(neighborMap.containsKey(theWord) == false)
+        {
+          connectWords = new ArrayList<String>();
+          connectWords.add(nextWord);
+          neighborMap.put(theWord, connectWords);
+        }
+      }
+    }
   }
 
   /**
@@ -99,9 +137,22 @@ public class UnigramWordPredictor implements WordPredictor {
    * @return the predicted next word, or null if no prediction can be made
    */
   public String predictNextWord(List<String> context) {
-    // TODO: Return a predicted word given the words preceding it
-    // Hint: only the last word in context should be looked at
-    return null;
+    if(context.isEmpty() == true)
+    {
+      return null;
+    }
+    else
+    {
+      String lastContext = context.get(context.size() - 1);
+      List<String> predictList = neighborMap.get(lastContext);
+
+      Random rand = new Random();
+      int randNum = 0;
+
+      randNum = rand.nextInt(0, predictList.size());
+      String predictWord = predictList.get(randNum);
+      return predictWord;
+    }
   }
   
   /**
