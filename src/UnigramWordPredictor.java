@@ -50,8 +50,40 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
-
+    neighborMap = new HashMap<>();
+    
     // TODO: Convert the trainingWords into neighborMap here
+    // Iterate through the array of training words
+    for (int i = 0; i < trainingWords.size() - 1; i++) {
+      // Check if the current word is in the map
+      if (neighborMap.containsKey(trainingWords.get(i))) {
+        // Word is in the map, add to the array of words after that word
+        // Only add a word if there IS a word
+        if (trainingWords.get(i + 1) != null) {
+          // Create a list variable to track the current list
+          List<String> list = neighborMap.get(trainingWords.get(i));
+          
+          // Add the word after the current word to the list
+          list.add(trainingWords.get(i + 1));
+
+          // Store the updated array in the neighbor map
+          neighborMap.put(trainingWords.get(i), list);
+        }
+      } else {
+        // Word is not stored in the map, create new entry and store the word after it in an array
+        // Only add a word if there IS a word
+        if (trainingWords.get(i + 1) != null) {
+          // Create a list variable to track the current list
+          List<String> list = new ArrayList<>();
+          
+          // Add the word after the current word to the list
+          list.add(trainingWords.get(i + 1));
+
+          // Store the updated array in the neighbor map
+          neighborMap.put(trainingWords.get(i), list);
+        }
+      }
+    }
   }
 
   /**
@@ -101,7 +133,10 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+    List<String> list = neighborMap.get(context.getLast());
+   
+    // Return a random word that could follow in regards to context
+    return list.get((int)(Math.random() * (list.size())));
   }
   
   /**
