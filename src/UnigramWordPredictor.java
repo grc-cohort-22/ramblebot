@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Scanner;
 public class UnigramWordPredictor implements WordPredictor {
   private Map<String, List<String>> neighborMap;
   private Tokenizer tokenizer;
+  private Random random = new Random();
+
 
   /**
    * Constructs a UnigramWordPredictor with the specified tokenizer.
@@ -52,6 +55,16 @@ public class UnigramWordPredictor implements WordPredictor {
     List<String> trainingWords = tokenizer.tokenize(scanner);
 
     // TODO: Convert the trainingWords into neighborMap here
+    neighborMap = new HashMap<>();
+    for (int i = 0; i < trainingWords.size() - 1; i++) {
+      String current = trainingWords.get(i);
+      String next = trainingWords.get(i + 1);
+
+      // Add next word to the list of neighbors for current
+      neighborMap.putIfAbsent(current, new ArrayList<>());
+      neighborMap.get(current).add(next);
+    }
+
   }
 
   /**
@@ -77,6 +90,8 @@ public class UnigramWordPredictor implements WordPredictor {
    * the neighbor map to select a word based on the observed frequencies in 
    * the training data. For example:
    * 
+   * 
+   * 
    * - If the last word in the context is "the", the next word should be randomly chosen 
    *   from ["cat", "cat", "dog"]. In this case, "cat" has a 2/3 probability 
    *   of being selected, and "dog" has a 1/3 probability, reflecting the 
@@ -101,8 +116,20 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
-  }
+    if (context == null || context.isEmpty() || neighborMap == null) {
+      return null;
+    }
+
+    String lastWord = context.get(context.size() - 1);
+    List<String> neighbors = neighborMap.get(lastWord);
+
+    if (neighbors == null || neighbors.isEmpty()) {
+      return null;
+    }
+
+    return neighbors.get(random.nextInt(neighbors.size()));
+}
+
   
   /**
    * Returns a copy of the neighbor map. The neighbor map is a mapping 
@@ -120,6 +147,4 @@ public class UnigramWordPredictor implements WordPredictor {
       copy.put(entry.getKey(), newList);
     }
 
-    return copy;
-  }
-}
+    return copy;  }}
