@@ -50,8 +50,34 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
-
     // TODO: Convert the trainingWords into neighborMap here
+    // create a empty hashmap, the key will be string while the value will be string
+     Map<String, List<String>> possiblites = new HashMap<>();
+
+    // first we loop through the training words going through each word in the list
+    // next place the first token as the key while making the value a new ArrayList
+    for(String word : trainingWords){
+      possiblites.put(word, new ArrayList<>());
+    }
+    // here we want to save the values in place1 and place2, in this case we are getting the i and i+1 places
+    // so we get pairs we can set respectively to keys and values, I also -1 on the size() as to not get an error
+    for (int i = 0; i < trainingWords.size()-1; i++){
+      // Store follow up words as key/values
+        String key = trainingWords.get(i);
+        String value = trainingWords.get(i+1);
+
+        // loop through using entryset
+        for (Map.Entry<String, List<String>> sorting : possiblites.entrySet()){
+          // since we have an entry of each token stored in possiblites as a key
+          // all we have to do is compare the key using equals to the keys in possiblites
+            if(sorting.getKey().equals(key)){
+              // we can then can acess the list of sortings key/value pair and directly add it to that specfic list
+              sorting.getValue().add(value);
+            }
+        }
+    }
+    //link neighborMap to my HashMap
+    this.neighborMap = possiblites;
   }
 
   /**
@@ -101,7 +127,38 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+    /*
+      store the size and random number to compare later
+      get frequencies of each word divide that by the size to get its probablity
+      store back inside map as <String, Double>
+      loop through again check the target random and check it against all the probablites
+      if statement to decide which word to predict next word
+     */
+    int size = context.size();
+    Double random = Math.random();
+    String predictedWord = "";
+
+    // Creates a map with exact amount of Probability frequencies
+    // This essentially does the same thing as tracking frequency but where multipleing by the orignal size and add 1 to update the value correctly
+    // Then we can divide and put it in the hashmap again with the correct value.
+    Map<String, Double> wordProbability = new HashMap<>();
+    for(String word: context){
+        if (!wordProbability.containsKey(word)) {
+            wordProbability.put(word, 1.0 / size);
+        } else {
+            wordProbability.put(word, ((wordProbability.get(word) * size + 1)) / size);
+        }
+    }
+    // Got stuck here 
+    for(Map.Entry<String, Double> checkProbability : wordProbability.entrySet()){
+        Double currentProbability = checkProbability.getValue();
+        if (currentProbability >= random){
+            predictedWord = checkProbability.getKey();
+        } else {
+            predictedWord = checkProbability.getKey();
+        }
+    }
+    return predictedWord;
   }
   
   /**
