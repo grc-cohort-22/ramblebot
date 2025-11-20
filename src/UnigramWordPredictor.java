@@ -1,7 +1,10 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -50,8 +53,41 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
+    // Create 2 lists, one to go through each word & one to check on the neighbor without index checking.
+    Queue<String> trainingWordsQ = new LinkedList();
+    Map<String, List<String>> neighborMap = new HashMap<>();
+    
+    /*
+     * Skeleton of inputting strings with a hashmap was found here:
+     * https://stackoverflow.com/a/3019388
+     * I've never done this so I had to do research.
+     */
 
-    // TODO: Convert the trainingWords into neighborMap here
+     //Iterate through the first list in order to prepare Queue for neighbor check.
+    for(int i = 0; i < trainingWords.size(); i++){
+        trainingWordsQ.add(trainingWords.get(i));
+    }
+
+    //Begin iteration of training words
+    for (String word : trainingWords) {
+        //Creates an object list that will store the existing list or null if absent
+        List<String> predictedWord = neighborMap.get(word);
+
+        //If it is null, it will create a new key with the word and a new list value
+        if(predictedWord == null){
+            predictedWord = new ArrayList<>();
+            neighborMap.put(word, predictedWord);
+        }
+        //Current word in training will be removed from Queue
+        trainingWordsQ.poll();
+        //Checks if the queue is at the end
+        if(trainingWordsQ.peek() != null){
+            //adds the word at head of queue
+            predictedWord.add(trainingWordsQ.peek());
+        }
+    }
+
+    this.neighborMap = neighborMap;
   }
 
   /**
@@ -101,7 +137,11 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+        String nextWord = "";
+        Random rand = new Random();
+
+        nextWord += context.get(rand.nextInt(context.size()));
+        return nextWord;
   }
   
   /**
