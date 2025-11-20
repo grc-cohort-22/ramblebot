@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -50,8 +51,32 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
-
-    // TODO: Convert the trainingWords into neighborMap here
+    this.neighborMap = new HashMap<>();
+    /*
+     * Iterated through trainingwords using for loop
+     *    If neighbormap does not have token as key:
+     *        add token as key
+     *        If not on final token
+     *            add next token as value
+     *    If neighbormap already has token as key:
+     *        If not on final token
+     *            copy current value list
+     *            add next token to copy
+     *            put copy list as value for key 
+     */
+    for (int i = 0; i<trainingWords.size(); i++) {
+      if (!neighborMap.containsKey(trainingWords.get(i))) {
+        neighborMap.put(trainingWords.get(i),new ArrayList<String>()); // had issues with all values pointing to same list. Found this: https://stackoverflow.com/questions/7969286/java-how-to-add-values-to-array-list-used-as-value-in-hashmap
+        if (i+1 != trainingWords.size()) {
+          neighborMap.get(trainingWords.get(i)).add(trainingWords.get(i+1)); //adds next token to list
+        }
+      } 
+      else {
+        if (i+1 != trainingWords.size()) {
+          neighborMap.get(trainingWords.get(i)).add(trainingWords.get(i+1)); //adds next token to list
+        }
+      }
+    } 
   }
 
   /**
@@ -101,7 +126,15 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+    List<String> potentialTokens = new ArrayList<>(neighborMap.get(context.getLast()));
+    Random random = new Random();
+    int tokenID = random.nextInt(potentialTokens.size());
+    if (potentialTokens.get(tokenID)!=null) {
+      return potentialTokens.get(tokenID);
+    } 
+    else { 
+      return null;
+    }
   }
   
   /**
