@@ -1,5 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * A tokenizer that converts text input to lowercase and splits it 
@@ -30,7 +33,59 @@ public class LowercaseSentenceTokenizer implements Tokenizer {
    */
   public List<String> tokenize(Scanner scanner) {
     // TODO: Implement this function to convert the scanner's input to a list of words and periods
-    return null;
+    List<String> wordSet = new ArrayList<>();
+
+    while (scanner.hasNext()) {
+      String word = scanner.next().toLowerCase();
+      // if word contains "." and if period is at the end.
+      if (word.contains(".") && word.charAt(word.length() - 1) == '.' ) {
+        // sperate word from period
+        String trimmed = word.substring(0, word.length() - 1);
+        //add the word
+        wordSet.add(trimmed);
+        // add the period.
+        wordSet.add(".");
+      }
+      else {
+        // else only add the word
+        wordSet.add(word);
+      }
+    }
+    return wordSet;
+    
   }
+  // DEBUGGING
+  
+  // public static void main(String[] args) {
+  //   LowercaseSentenceTokenizer tokenizer = new LowercaseSentenceTokenizer();
+  //   Scanner scanner = new Scanner("Hello world. This is Dr.Smith's example.");
+  //   List<String> wordSet = new ArrayList<>();
+  //   List<String> tokens = tokenizer.tokenize(scanner);
+  //   System.out.println(wordSet);
+    
+  //   while (scanner.hasNext()) {
+  //     String word = scanner.next();
+  //     // if word contains "." and if period is at the end (word.length(i) == ".")
+
+  //     if (word.contains(".") && word.charAt(word.length() - 1) == '.' ) {
+  //       System.out.println(word.contains("."));
+  //       System.out.println(word);
+  //       // System.out.println(".");
+  //       String trimmed = word.substring(0, word.length() - 1);
+  //       //add the word
+  //       wordSet.add(trimmed);
+  //       // add the period.
+  //       wordSet.add(".");
+        
+      
+  //     }
+  //     else {
+  //       wordSet.add(word);
+  //     }
+  //   }
+  //   System.out.println(wordSet);
+  //   System.out.println(tokens);
+
+  // }
 }
 
