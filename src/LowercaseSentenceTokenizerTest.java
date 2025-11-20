@@ -19,6 +19,14 @@ class LowercaseSentenceTokenizerTest {
     /*
      * Write your test here!
      */
+    @Test
+    void testTokenizeWithOneWord() {
+        LowercaseSentenceTokenizer tokenizer = new LowercaseSentenceTokenizer();
+        Scanner scanner = new Scanner("qwertyuiopasdfghjklzxcvbnm");
+        List<String> tokens = tokenizer.tokenize(scanner);
+
+        assertEquals(List.of("qwertyuiopasdfghjklzxcvbnm"), tokens);
+    }
     
 
     // Wave 3
