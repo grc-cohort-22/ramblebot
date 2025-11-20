@@ -46,7 +46,7 @@ This is a large, difficult project. Start early, and get help when you need it.
    Sometimes this button takes a little bit to show up when you first open VS Code. If you're not seeing it, make sure you have the Java extension pack installed and it is active.
 1. It should ask you for a filename. Give it the following filename:
    ```
-   wikipediaData.txt
+   keatsTraining.txt
    ```
    Then hit enter.
 1. It should ask you for a number of words. Enter a positive integer and hit enter.
@@ -119,7 +119,7 @@ Consider doing any of the following (some are very hard!):
 - Adding more tests to the classes you implemented
 - Testing `RambleApp`
 - Creating a Bigram predictor
-- Making your Unigram predictor memory-efficient.
+- Making your Unigram predictor memory-efficient (hint: consider how you can avoid keeping redundant copies of words)
 - Making RambleApp memory-efficient
 - Anything else you find interesting!
 
@@ -128,5 +128,3 @@ Consider doing any of the following (some are very hard!):
 Submit your project by making a PR and copying the link to the canvas assignment.
 
 TURN SOMETHING IN BY THE DUE DATE EVEN IF YOU'RE NOT FINISHED.
-
-My changes.
