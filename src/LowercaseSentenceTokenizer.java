@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A tokenizer that converts text input to lowercase and splits it 
@@ -29,8 +31,26 @@ public class LowercaseSentenceTokenizer implements Tokenizer {
    * @return a list of tokens, where each token is a word or a period
    */
   public List<String> tokenize(Scanner scanner) {
-    // TODO: Implement this function to convert the scanner's input to a list of words and periods
-    return null;
+
+    List<String> myList = new ArrayList<>();
+	  while(scanner.hasNext()){
+      String word = scanner.next().toLowerCase();
+      int len = word.length();
+      String lastLetter = word.substring(len-1);
+      // This checks to see if the last letter is a . if it is then you separate the word from period
+      // if its not a period, that means its a word like Dr.Smith, and so you wouldnt want to separate.
+      if(lastLetter.equals(".")){
+          myList.add(word.substring(0, len-1));
+          myList.add(lastLetter);
+          }else{
+            myList.add(word);
+          }
+    }
+    return myList;
   }
 }
+
+// b a n a n a .
+// 0 1 2 3 4 5 6
+// length = 7
 
