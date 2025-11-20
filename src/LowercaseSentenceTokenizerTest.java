@@ -19,6 +19,14 @@ class LowercaseSentenceTokenizerTest {
     /*
      * Write your test here!
      */
+    @Test
+    void testTokenizeWithExcessSpaces() {
+        LowercaseSentenceTokenizer tokenizer = new LowercaseSentenceTokenizer();
+        Scanner scanner = new Scanner("pluto pluto      is        not  a     planet  planet    anymore  anymore");
+        List<String> tokens = tokenizer.tokenize(scanner);
+
+        assertEquals(List.of("pluto", "pluto", "is", "not", "a", "planet", "planet", "anymore", "anymore"), tokens);
+    }
     
 
     // Wave 3

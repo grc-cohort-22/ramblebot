@@ -102,7 +102,7 @@ public class RambleApp {
             System.out.println("This is probably because you haven't implemented it yet");
             System.out.println("Begin with Wave 1 in the instructions, and implement LowercaseSentenceTokenizer");
             System.out.println("If you have implemented it, there's a bug in your code where it's returning null for the tokens.");
-            return;
+            return;            
         }
         if (tokens.isEmpty()) {
             System.out.println("The file is empty. No text to generate.");
@@ -114,6 +114,10 @@ public class RambleApp {
         context.add(tokens.get(0));
         System.out.print(context.get(0)); // Print the first word
 
+        StringBuilder generatedText = new StringBuilder();
+        generatedText.append(context.get(0));
+
+        int wordCount = 0;
         for (int i = 1; i < numWords; i++) {
             String nextWord = predictor.predictNextWord(context);
             if (nextWord == null) {
@@ -125,12 +129,36 @@ public class RambleApp {
             }
             System.out.print(" " + nextWord);
 
-            // Update the context with the next word
-            context.add(nextWord);
+        // Spacing rule for text that are not punctuation marks
+        if (!nextWord.matches("[.,!?;:]")) {
+            generatedText.append(" ");
+        }
+        generatedText.append(nextWord);
+        wordCount++;
+        // Handle line breaks when a sentence ends
+        if (nextWord.matches("[.!?]")) {
+            generatedText.append("\n");
         }
 
-        System.out.println();
+        context.add(nextWord);
+    
+
+    System.out.println();
+
+    // Call saveRambleBotOutput to save RambleBot's output to a the RambleBotOutput.txt file
+    saveRambleBotOutput(generatedText.toString(), "RambleBotOutput.txt");
+
     }
+}
+
+    private void saveRambleBotOutput(String text, String outputFilename) {
+        try (java.io.FileWriter writer = new java.io.FileWriter(outputFilename)) {
+            writer.write(text);
+            System.out.println("RambleBot rambled out a text token to " + outputFilename + ":");
+        } catch (java.io.IOException e) {
+            System.out.println("Failed to save: " + e.getMessage());
+        }
+    }  
 
     /**
      * Reads the contents of the specified file and returns a list of tokens
@@ -142,12 +170,16 @@ public class RambleApp {
     private List<String> getTokensFromFile(String filename) {
         File file = new File(filename);
         try (Scanner fileScanner = new Scanner(file)) {
-            return tokenizer.tokenize(fileScanner);
+            List<String> tokens = tokenizer.tokenize(fileScanner);
+            return tokens;
         } catch (FileNotFoundException e) {
             System.out.println("Failed to read tokens from file.");
             return new ArrayList<>();
         }
     }
+
+
+
 
     /**
      * The entry point for the application. Creates an instance of RambleApp
@@ -163,5 +195,6 @@ public class RambleApp {
 
         RambleApp app = new RambleApp(tokenizer, predictor, inputScanner);
         app.run();
+
     }
 }

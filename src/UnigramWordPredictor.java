@@ -50,8 +50,21 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
+    
+    // Methods within the same class as the private instance fields, can access them directly
+    neighborMap = new HashMap<>();
+    // Loop through the list of training words and map each word to the list of words that proceeds it
+    for (int i = 0; i < trainingWords.size() -1; i++) {
+      String key = trainingWords.get(i);
+      String value = trainingWords.get(i + 1);
+      // This line checks if the key is present in the map, if not it adds the key with an empty list.
+      // Since the neighborMap is presently empty, each iteration of the for loop will trigger putIfAbsent
+      // To add the key with an empty list.
+      neighborMap.putIfAbsent(key, new ArrayList<>());
 
-    // TODO: Convert the trainingWords into neighborMap here
+      // Now we can add values to the list associated with a given key
+      neighborMap.get(key).add(value);
+    }
   }
 
   /**
@@ -101,7 +114,17 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+    
+    String lastWord = context.get(context.size() - 1);
+    List<String> possibleNextWords = neighborMap.get(lastWord);
+
+    if (possibleNextWords == null || possibleNextWords.isEmpty()) {
+        return null;
+    }
+
+    String nextWord = possibleNextWords.get((int)(Math.random() * possibleNextWords.size()));    
+
+    return nextWord;
   }
   
   /**
