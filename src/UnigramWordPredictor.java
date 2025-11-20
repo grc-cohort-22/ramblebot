@@ -1,8 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * A class for predicting the next word in a sequence using a unigram model.
@@ -10,7 +6,7 @@ import java.util.Scanner;
  * words that directly follow it in the text.
  */
 public class UnigramWordPredictor implements WordPredictor {
-  private Map<String, List<String>> neighborMap;
+  private Map<String, List<String>> neighborMap = new HashMap<>();
   private Tokenizer tokenizer;
 
   /**
@@ -50,8 +46,15 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
-
-    // TODO: Convert the trainingWords into neighborMap here
+    for (int i = 0; i < trainingWords.size() - 1; i++) {
+      String x = trainingWords.get(i);
+      if (!neighborMap.containsKey(x)) {
+          neighborMap.put(x, new ArrayList<String>());
+      }
+      if (trainingWords.get(i+1)!=null) {
+          neighborMap.get(x).add(trainingWords.get(i+1));
+      }
+    }
   }
 
   /**
@@ -99,9 +102,12 @@ public class UnigramWordPredictor implements WordPredictor {
    * @return the predicted next word, or null if no prediction can be made
    */
   public String predictNextWord(List<String> context) {
-    // TODO: Return a predicted word given the words preceding it
-    // Hint: only the last word in context should be looked at
-    return null;
+    //Not sure if this is actually doing the random correctly. I'm choosing a random number from the range, which should weight the average correctly, but I'm not very good at statistics.
+    List<String> possibilities = neighborMap.get(context.get(context.size() - 1));
+    Random random = new Random();
+    int range = possibilities.size();
+    int choice = random.nextInt(range);
+    return possibilities.get(choice);
   }
   
   /**
