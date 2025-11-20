@@ -29,11 +29,11 @@ public class UnigramWordPredictor implements WordPredictor {
    * in the text. The resultant map is stored in the neighborMap
    * instance variable.
    * 
-   * For example:
+   * For example: Take the current word. 
    * If the input text is: "The cat sat. The cat slept. The dog barked."
    * After tokenizing, the tokens would be: ["the", "cat", "sat", ".", "the", "cat", "slept", ".", "the", "dog", "barked", "."]
    * 
-   * The resulting map (neighborMap) would be:
+   * The resulting map (neighborMap) would be: Find the next word and add it to the list of words.
    * {
    *   "the" -> ["cat", "cat", "dog"],
    *   "cat" -> ["sat", "slept"],
@@ -51,7 +51,18 @@ public class UnigramWordPredictor implements WordPredictor {
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
 
-    // TODO: Convert the trainingWords into neighborMap here
+    //TODO: Convert the trainingWords into neighborMap here
+    neighborMap = new HashMap<>();
+
+    for(int i = 0; i < trainingWords.size() - 1; i++) {
+      String word = trainingWords.get(i);
+      String nextWord = trainingWords.get(i + 1);
+
+      if(!neighborMap.containsKey(word)) {
+        neighborMap.put(word, new ArrayList<>());
+      }
+      neighborMap.get(word).add(nextWord);
+    }
   }
 
   /**
@@ -101,6 +112,18 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
+    String lastWord = context.get(context.size() - 1);
+    
+
+    //Observed frequency of 'cat' after 'the' was 1.0, expected 0.6666666666666666.
+    //Didn't cast the whole thing needed brackets... 
+    if(neighborMap.containsKey(lastWord)) {
+      List<String> nextword = neighborMap.get(lastWord);
+      int rand = (int) (Math.random() * nextword.size());
+      return nextword.get(rand);
+    }
+
+    //No predictions can be made keep it
     return null;
   }
   
