@@ -24,6 +24,7 @@ class UnigramWordPredictorTest {
      * The expected neighbor map is checked to see if it matches this pattern.
      * The test does not care about the order of the map or the lists.
      */
+
     @Test
     void testTrainAndGetNeighborMap() {
         // Use a fake tokenizer with predefined tokens
