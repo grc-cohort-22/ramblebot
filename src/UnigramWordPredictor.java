@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -50,9 +52,25 @@ public class UnigramWordPredictor implements WordPredictor {
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
+    // Key is word, value is the list of values that appeared after it
+    // Treat as a setter, use the constructor on top, 
+    Map<String, List<String>> neighborMap = new HashMap<>();
+    for (int i = 0; i < trainingWords.size() - 1; i++) {
+      String currentWord = trainingWords.get(i);
+      String nextWord = trainingWords.get(i + 1);
+      // Neighbor map needs to be a list of resulting Strings in the values area, that's where the error is getting thrown from my observations
+      // Inputs an empty value while we wait for the rest of the process
+      neighborMap.putIfAbsent(currentWord, new ArrayList<>());
+      
+      neighborMap.get(currentWord).add(nextWord);
 
-    // TODO: Convert the trainingWords into neighborMap here
+      // Unigram word predictor is used to apply global changes, but how? You're overcomplicating things, think simple
+      // it has the equiavlent to a global variable, so you just need to access it in a non-instance
+    }
+    this.neighborMap = neighborMap;
   }
+      // }
+    // TODO: Convert the trainingWords into neighborMap here
 
   /**
    * Predicts the next word based on the given context.
@@ -101,7 +119,22 @@ public class UnigramWordPredictor implements WordPredictor {
   public String predictNextWord(List<String> context) {
     // TODO: Return a predicted word given the words preceding it
     // Hint: only the last word in context should be looked at
-    return null;
+    if (context == null || context.isEmpty() || neighborMap == null) {
+      return null;
+    }
+    String lastWord = context.get(context.size() - 1); 
+    List<String> nextWords = neighborMap.get(lastWord);
+
+    if (nextWords == null || nextWords.isEmpty()) {
+      return null;
+    }
+
+    Random random = new Random();
+    
+    int randomIndex = random.nextInt(context.size());
+
+    return nextWords.get(randomIndex);
+
   }
   
   /**
