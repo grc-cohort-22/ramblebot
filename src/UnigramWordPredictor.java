@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -34,6 +35,7 @@ public class UnigramWordPredictor implements WordPredictor {
    * After tokenizing, the tokens would be: ["the", "cat", "sat", ".", "the", "cat", "slept", ".", "the", "dog", "barked", "."]
    * 
    * The resulting map (neighborMap) would be:
+   * key: cat {the, cat , sat}
    * {
    *   "the" -> ["cat", "cat", "dog"],
    *   "cat" -> ["sat", "slept"],
@@ -44,12 +46,70 @@ public class UnigramWordPredictor implements WordPredictor {
    *   "barked" -> ["."]
    * }
    * 
+   * ["my", "lizard", "ate", ".", "my", "lizard", "slept", ".", "your", "lizard", "walked", "."]
+   * 
+   * {
+   * "my" -> ["lizard", "lizard", ]
+   * "lizard" -> ["ate", "slept", "walked"]
+   * "ate" -> [".", ]
+   * "." -> ["my", "your"]
+   * "slept" -> [".", ]
+   * 'your' -> ["lizard"]
+   * "walked" -> ["."]
+   * }
+   * 
+   * 
+   * currentWord: potato
+   * nextWord: grew
+   * 
+   * {
+   *  "the" -> ["fish", "potato"]
+   * "fish" -> ["swan"]
+   * "swam" -> ["."]
+   * "." -> ["the"]
+   * "potato" -> []
+   * 
+   * }
+   * 
+   * if currentword not in map:
+   *  map[currentWord] = []
+   *  map[currentWord].append(nextWord)
+   * else:
+   *  map[currentWord.key].append(nextWord)
+   * 
+   * 
    * The order of the map and the order of each list is not important.
    * 
    * @param scanner the Scanner to read the training text from
    */
   public void train(Scanner scanner) {
     List<String> trainingWords = tokenizer.tokenize(scanner);
+
+    Map<String, List<String>> neighborMap = new HashMap<>();
+    
+
+    for(int i = 0; i < trainingWords.size()-1; i++){
+      String currentWord = trainingWords.get(i);
+      String nextWord = trainingWords.get(i + 1);
+
+  //   if currentword not in map:
+  //    map[currentWord] = []
+  //    map[currentWord].append(nextWord)
+  //   else:
+  //    map[currentWord.key].append(nextWord)
+  // 
+      if(!neighborMap.containsKey(currentWord)){
+       List<String> newList = new ArrayList<>();
+       newList.add(nextWord);
+        neighborMap.put(currentWord, newList);
+      }else{
+        neighborMap.get(currentWord).add(nextWord);
+
+      }
+
+    }
+    this.neighborMap = neighborMap;
+    
 
     // TODO: Convert the trainingWords into neighborMap here
   }
@@ -99,9 +159,33 @@ public class UnigramWordPredictor implements WordPredictor {
    * @return the predicted next word, or null if no prediction can be made
    */
   public String predictNextWord(List<String> context) {
-    // TODO: Return a predicted word given the words preceding it
+    if(context.isEmpty()){
+      return null;
+    }
+    
     // Hint: only the last word in context should be looked at
-    return null;
+    // if neighbormap contains key that predict the next word
+    // last word of the context
+    String lastWord = context.get(context.size()-1);
+    // if neighborMap contains the last word there is a prediction.
+    // if neighborMap does not contain last word there is no prediction
+    List<String> words =  neighborMap.get(lastWord);
+    
+    if(words == null){
+      return null;
+    }
+    // TODO: Return a predicted word given the words preceding it
+
+   
+    
+    Random random = new Random();
+    int index = random.nextInt(words.size());
+    return words.get(index);
+
+
+
+   
+    
   }
   
   /**
